@@ -1,0 +1,9 @@
+{
+  "name": "i30 Maikão Edition",
+  "short_name": "i30 Maikão",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#06152d",
+  "theme_color": "#06152d",
+  "description": "Painel pessoal do Hyundai i30 prata 2010"
+}

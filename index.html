@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06152d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="i30 Maikão">
+<link rel="manifest" href="manifest.webmanifest">
+<title>i30 Maikão Edition</title>
+<style>
+:root{color-scheme:dark;--cyan:#29c9ff;--muted:#9fb4d4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 22% 12%,#075b65 0,#082b49 36%,#050b1b 76%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;min-height:100vh;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom)}
+main{max-width:720px;margin:auto;padding:18px 0 28px}.top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;letter-spacing:.12em}.brand{font-weight:800;color:#fff;font-size:15px;letter-spacing:.08em}.pill{border:1px solid #2b668a;border-radius:20px;padding:7px 11px;background:#092341}
+.hero{margin-top:16px;border:1px solid #1b5674;border-radius:26px;overflow:hidden;background:linear-gradient(135deg,#073f4b,#07152f 72%);box-shadow:0 18px 50px #0008}
+.car{width:100%;height:220px;object-fit:cover;object-position:center;background:#07152f}
+.heroInfo{padding:0 18px 18px;display:flex;justify-content:space-between;gap:12px;align-items:end}.name{font-size:24px;font-weight:800}.sub{color:var(--muted);font-size:13px;margin-top:4px}.clock{text-align:right;font-size:38px;font-weight:750;letter-spacing:-.04em}.date{font-size:13px;color:#c3d5ed}
+.section{margin:18px 2px 10px;color:#b8cde6;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.tile{border:1px solid #205273;background:#071d36d9;border-radius:18px;padding:15px;text-decoration:none;color:white;min-height:82px;display:flex;gap:12px;align-items:center}.tile:active{transform:scale(.98)}.ico{font-size:25px;width:34px;text-align:center}.tile b{display:block;font-size:15px}.tile small{display:block;color:var(--muted);margin-top:3px;font-size:12px}
+.weather{margin-top:12px;padding:15px 17px;border-radius:18px;background:#0b2746;border:1px solid #205273;display:flex;justify-content:space-between;align-items:center}.weather strong{font-size:23px}.weather small{display:block;color:var(--muted);margin-top:3px}
+.footer{margin-top:14px;color:#8fa9c8;font-size:11px;line-height:1.5;text-align:center}.notice{color:#ffd98a}
+@media(min-width:600px){.car{height:300px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.clock{font-size:48px}}
+</style>
+</head>
+<body><main>
+<div class="top"><span class="brand">i30 · MAIKÃO EDITION</span><span class="pill">HYUNDAI 2010</span></div>
+<section class="hero">
+<img class="car" src="assets/i30-prata.jpg" alt="Hyundai i30 prata 2010">
+<div class="heroInfo"><div><div class="name">Olá, Maikão</div><div class="sub">Seu painel personalizado</div></div><div><div class="clock" id="clock">--:--</div><div class="date" id="date">Carregando data…</div></div></div>
+</section>
+<div class="weather"><div><strong id="temp">--°</strong><small id="weatherText">Consultando clima…</small></div><div style="font-size:30px" id="weatherIcon">🌤️</div></div>
+<div class="section">Acesso rápido</div>
+<div class="grid">
+<a class="tile" href="https://waze.com/ul"><span class="ico">🧭</span><span><b>Waze</b><small>Abrir navegação</small></span></a>
+<a class="tile" href="https://maps.google.com"><span class="ico">📍</span><span><b>Google Maps</b><small>Rotas e trânsito</small></span></a>
+<a class="tile" href="https://music.apple.com"><span class="ico">🎵</span><span><b>Apple Music</b><small>Abrir músicas</small></span></a>
+<a class="tile" href="https://open.spotify.com"><span class="ico">🎧</span><span><b>Spotify</b><small>Abrir Spotify</small></span></a>
+<a class="tile" href="tel:"><span class="ico">📞</span><span><b>Telefone</b><small>Fazer uma ligação</small></span></a>
+<a class="tile" href="sms:"><span class="ico">💬</span><span><b>Mensagens</b><small>Abrir mensagens</small></span></a>
+</div>
+<div class="section">Informações do veículo</div>
+<div class="weather"><div><b>Hyundai i30 prata · 2010</b><small>Velocidade e dados do motor</small></div><span class="pill">OBD2 futuro</span></div>
+<div class="footer">Painel web pessoal. A velocidade real não é medida nesta versão.<br><span class="notice">Use os atalhos somente com o veículo parado ou por comandos de voz.</span><br>Este painel não substitui a interface oficial do Apple CarPlay.</div>
+</main>
+<script>
+function tick(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});document.getElementById('date').textContent=d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});}
+tick();setInterval(tick,1000);
+async function weather(){
+ try{
+  const pos=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(resolve,reject,{timeout:9000}));
+  const {latitude,longitude}=pos.coords;
+  const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
+  const j=await r.json();const t=Math.round(j.current.temperature_2m);const c=j.current.weather_code;
+  const labels={0:'Céu limpo',1:'Predominantemente limpo',2:'Parcialmente nublado',3:'Nublado',45:'Neblina',48:'Neblina',51:'Garoa',53:'Garoa',55:'Garoa forte',61:'Chuva fraca',63:'Chuva',65:'Chuva forte',80:'Pancadas de chuva',81:'Pancadas de chuva',82:'Pancadas fortes',95:'Trovoadas'};
+  document.getElementById('temp').textContent=t+'°C';document.getElementById('weatherText').textContent=labels[c]||'Condição atual';document.getElementById('weatherIcon').textContent=(c>=51?'🌧️':c>=2?'☁️':'☀️');
+ }catch(e){document.getElementById('weatherText').textContent='Permita a localização para consultar o clima';}
+}
+weather();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
